@@ -1,0 +1,23 @@
+.:53 {
+    errors
+    health {
+        lameduck 10s
+    }
+    ready
+    rewrite name vernissage-api.internal vernissage-api.vernissage.svc.cluster.local.
+    rewrite name vernissage-web.internal vernissage-web.vernissage.svc.cluster.local.
+    rewrite name vernissage-proxy.internal vernissage-proxy.vernissage.svc.cluster.local.
+    rewrite name vernissage-push.internal vernissage-push.vernissage.svc.cluster.local.
+    rewrite name vernissage-redis.internal vernissage-redis.vernissage.svc.cluster.local.
+    kubernetes  cluster.local  cluster.local in-addr.arpa ip6.arpa {
+        pods insecure
+        fallthrough in-addr.arpa ip6.arpa
+        ttl 30
+    }
+    prometheus  0.0.0.0:9153
+    forward  . /etc/resolv.conf
+    cache  30
+    loop
+    reload
+    loadbalance
+}

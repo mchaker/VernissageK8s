@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vernissage-postgres
+  name: postgres
+  namespace: vernissage
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: vernissage-postgres
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vernissage-postgres
+      namespace: vernissage
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: postgres-secret
+                optional: false
+          image: postgres:17
+          imagePullPolicy: Always
+          name: postgres
+          ports:
+            - containerPort: 5432
+              name: postgres
+              protocol: TCP
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: postgresdata
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: postgres-pvc-vernissage

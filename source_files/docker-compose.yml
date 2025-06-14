@@ -1,0 +1,93 @@
+services:
+  api:
+    image: mczachurski/vernissage-server:${DOCKER_TAG:-latest}
+    restart: always
+    healthcheck:
+      test: curl --output /dev/null --silent --head --fail http://host.docker.internal:8080
+      interval: 5s
+    env_file: "env"
+    logging: &log-syslog
+      driver: syslog
+      options:
+        tag: "{{.Name}}"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      ip6net:
+        aliases:
+          - vernissage-api.internal
+          - host.docker.internal
+
+
+  web:
+    image: mczachurski/vernissage-web:${DOCKER_TAG:-latest}
+    restart: always
+    env_file: "env"
+    depends_on:
+      api:
+        condition: service_started
+    logging: *log-syslog
+    networks:
+      ip6net:
+        aliases:
+          - vernissage-web.internal
+          - host.docker.internal
+
+
+  proxy:
+    image: mczachurski/vernissage-proxy:${DOCKER_TAG:-latest}
+    restart: always
+    ports:
+      - "${EXPOSED_PORT:-8080}:8080"
+    logging: *log-syslog
+    depends_on:
+      web:
+        condition: service_started
+    networks:
+      ip6net:
+        aliases:
+          - vernissage-proxy.internal
+          - host.docker.internal
+
+
+  push:
+    image: mczachurski/vernissage-push:${DOCKER_TAG:-latest}
+    restart: always
+    healthcheck: 
+      test: curl --output /dev/null --silent --head --fail http://host.docker.internal:3000
+      interval: 5s
+    env_file: "env"
+    logging: *log-syslog
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      ip6net:
+        aliases:
+          - vernissage-push.internal
+          - host.docker.internal
+    
+  redis:
+    image: redis
+    restart: always
+    healthcheck:
+      test: redis-cli ping | grep PONG
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    command: redis-server
+    logging: *log-syslog
+    networks:
+      ip6net:
+        aliases:
+          - vernissage-redis.internal
+          - host.docker.internal
+
+
+networks:
+  ip6net:
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: ${IPV6_SUBNET:-2001:db8::/64}

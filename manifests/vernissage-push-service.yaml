@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vernissage-push
+  namespace: vernissage
+spec:
+  clusterIP: None
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - name: push
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: vernissage-push
+  sessionAffinity: None
+  type: ClusterIP
