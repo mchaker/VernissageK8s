@@ -203,5 +203,7 @@ Then you can access Vernissage at `http://localhost:8080`.
 
 ## Additional Notes
 
-- I have not yet figured out how to get WebPush notifications to work. The WebPush server is deployed as part of the manifests in this repository, but probably needs some extra configuration either in the Vernissage Web frontend/UI or extra environment variables.
+- **How to get WebPush notifications to work:**
+  - [These instructions worked for me](https://wiki.pnpde.social/books/vernissage/page/vernissage-hosten-webpush-einrichten)
+  - Generate a VAPID key pair using the following site: [VAPID Key Generator](https://www.attheminute.com/vapid-key-generator)
 - Vernissage can only run on a single domain/URL.
