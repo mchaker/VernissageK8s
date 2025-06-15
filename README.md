@@ -209,4 +209,5 @@ Then you can access Vernissage at `http://localhost:8080`.
 - **How to get WebPush notifications to work:**
   - [These instructions worked for me](https://wiki.pnpde.social/books/vernissage/page/vernissage-hosten-webpush-einrichten)
   - Generate a VAPID key pair using the following site: [VAPID Key Generator](https://www.attheminute.com/vapid-key-generator)
+  - WebPush does NOT work in Incognito mode! WebPush requires a regular browser window. I don't understand why yet, but that's how it works.
 - Vernissage can only run on a single domain/URL.
