@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: postgres
   namespace: vernissage
+  labels:
+    app: vernissage
 spec:
   clusterIP: None
   internalTrafficPolicy: Cluster
@@ -15,6 +17,6 @@ spec:
       protocol: TCP
       targetPort: 5432
   selector:
-    app: vernissage-postgres
+    component: vernissage-postgres
   sessionAffinity: None
   type: ClusterIP

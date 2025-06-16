@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vernissage-postgres
+    component: vernissage-postgres
   name: postgres
   namespace: vernissage
 spec:
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: vernissage-postgres
+      component: vernissage-postgres
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,7 +20,8 @@ spec:
   template:
     metadata:
       labels:
-        app: vernissage-postgres
+        app: vernissage
+        component: vernissage-postgres
       namespace: vernissage
     spec:
       containers:

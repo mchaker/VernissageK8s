@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vernissage-push
+    component: vernissage-push
   name: vernissage-push
   namespace: vernissage
 spec:
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: vernissage-push
+      component: vernissage-push
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,7 +20,8 @@ spec:
   template:
     metadata:
       labels:
-        app: vernissage-push
+        app: vernissage
+        component: vernissage-push
       namespace: vernissage
     spec:
       affinity: {}

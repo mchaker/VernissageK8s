@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vernissage-redis
+    component: vernissage-redis
   name: vernissage-redis
   namespace: vernissage
 spec:
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: vernissage-redis
+      component: vernissage-redis
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,7 +20,8 @@ spec:
   template:
     metadata:
       labels:
-        app: vernissage-redis
+        app: vernissage
+        component: vernissage-redis
       namespace: vernissage
     spec:
       affinity: {}

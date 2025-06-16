@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: vernissage-web
+    component: vernissage-web
   name: vernissage-web
   namespace: vernissage
 spec:
@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: vernissage-web
+      component: vernissage-web
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -22,7 +22,8 @@ spec:
       annotations:
         cattle.io/timestamp: '2025-06-14T01:01:33Z'
       labels:
-        app: vernissage-web
+        app: vernissage
+        component: vernissage-web
       namespace: vernissage
     spec:
       affinity: {}

@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: vernissage-web
   namespace: vernissage
+  labels:
+    app: vernissage
 spec:
   clusterIP: None
   internalTrafficPolicy: Cluster
