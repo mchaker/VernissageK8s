@@ -205,7 +205,9 @@ Then you can access Vernissage at `http://localhost:8080`.
 
 - Make sure to make your S3 bucket public (if on backblaze B2), so that Vernissage can provide URLs to images in it, to web clients, as part of the `VERNISSAGE_CSP_IMG` env var.
   - If you do not want to host a public S3 bucket, you'll need to run a some kind of proxy that can serve up the bucket contents, and use that proxy URL for `VERNISSAGE_CSP_IMG`.
+    - Remember to set the following setting in the VerissageWeb UI to match the S3 proxy URL: _Vernissage -> Settings -> Images Url_
     - An example S3 proxy is the [NGINX S3 Gateway](https://github.com/nginx/nginx-s3-gateway) -- docs are in [the docs folder](https://github.com/nginx/nginx-s3-gateway/blob/main/docs/getting_started.md).
+    - Also remember to [clear your CloudFlare cache](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-everything/) if you are using CloudFlare.
 - **How to get WebPush notifications to work:**
   - [These instructions worked for me](https://wiki.pnpde.social/books/vernissage/page/vernissage-hosten-webpush-einrichten)
   - Generate a VAPID key pair using the following site: [VAPID Key Generator](https://www.attheminute.com/vapid-key-generator)
