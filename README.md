@@ -211,3 +211,28 @@ Then you can access Vernissage at `http://localhost:8080`.
   - Generate a VAPID key pair using the following site: [VAPID Key Generator](https://www.attheminute.com/vapid-key-generator)
   - WebPush does NOT work in Incognito mode! WebPush requires a regular browser window. I don't understand why yet, but that's how it works.
 - Vernissage can only run on a single domain/URL.
+- If you are using a metrics scraper like Alloy, you should exclude Vernissage from metrics scraping (until metrics are exposed by Vernissage):
+  - Add the following to your Alloy config if you use kubernetes discovery::
+    ```json
+      ...
+
+      discovery.kubernetes "pods" {
+        role = "pod"
+
+        selectors {
+          role = "pod"
+          label = "app!=vernissage"
+        }
+      }
+
+      discovery.kubernetes "services" {
+        role = "service"
+
+        selectors {
+          role = "service"
+          label = "app!=vernissage"
+        }
+      }
+
+      ...
+    ```
