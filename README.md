@@ -213,7 +213,7 @@ Then you can access Vernissage at `http://localhost:8080`.
 - Vernissage can only run on a single domain/URL.
 - If you are using a metrics scraper like Alloy, you should exclude Vernissage from metrics scraping (until metrics are exposed by Vernissage):
   - Add the following to your Alloy config if you use kubernetes discovery::
-    ```json
+    ```hcl
       ...
 
       discovery.kubernetes "pods" {
