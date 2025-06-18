@@ -41,6 +41,7 @@ Add the lines above to the Corefile, save, and exit.
 1. Postgres storage (PersistentVolumeClaim)
 1. Postgres database
 1. Redis cache
+1. NGINX S3 Proxy
 1. Vernissage API backend
 1. Vernissage Web frontend
 1. Vernissage HTTP proxy
@@ -123,6 +124,15 @@ Deploy the Redis cache with the following command:
 ```bash
 kubectl apply -f manifests/vernissage-redis.yaml
 kubectl apply -f manifests/vernissage-redis-service.yaml
+```
+
+### Deploy the NGINX S3 Proxy
+
+Deploy the NGINX S3 Proxy with the following command:
+
+```bash
+kubectl apply -f manifests/nginx-s3-proxy.yaml
+kubectl apply -f manifests/nginx-s3-proxy-service.yaml
 ```
 
 ### Deploy the Vernissage API backend
