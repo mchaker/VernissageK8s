@@ -1,0 +1,94 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: vernissage
+  name: postgres-backup
+  namespace: vernissage
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      namespace: vernissage
+    spec:
+      template:
+        spec:
+          affinity: {}
+          containers:
+            - args:
+                - >-
+                  b2v4 file upload YOUR_BUCKET_HERE
+                  /var/lib/postgresql/vernissage_db-`date +'%Y%m%d-%H'`
+                  YOUR_K8S_CLUSTER_NAME_HERE/vernissage/postgres-db-backups/vernissage_db-`date +'%Y%m%d-%H'`
+              command:
+                - /bin/sh
+                - '-c'
+              env:
+                - name: B2_APPLICATION_KEY_ID
+                  value: YOUR_S3_KEY_ID_HERE
+                - name: B2_APPLICATION_KEY
+                  value: YOUR_S3_KEY_HERE
+              image: backblazeit/b2:latest
+              imagePullPolicy: Always
+              name: b2-save
+              resources: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                privileged: false
+                readOnlyRootFilesystem: false
+                runAsNonRoot: false
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /var/lib/postgresql
+                  name: postgresdata
+                  readOnly: true
+          dnsPolicy: ClusterFirst
+          initContainers:
+            - args:
+                - >-
+                  pg_dumpall -U vernissage-user >
+                  /var/lib/postgresql/vernissage_db-`date +'%Y%m%d-%H'`
+              command:
+                - /bin/sh
+                - '-c'
+              env:
+                - name: PGHOST
+                  value: postgres.vernissage.svc.cluster.local.
+                - name: PGUSER
+                  valueFrom:
+                    configMapKeyRef:
+                      key: POSTGRES_USER
+                      name: postgres-secret
+                      optional: false
+                - name: PGPASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      key: POSTGRES_PASSWORD
+                      name: postgres-secret
+                      optional: false
+              envFrom:
+                - configMapRef:
+                    name: postgres-secret
+                    optional: false
+              image: postgres:17
+              imagePullPolicy: Always
+              name: postgres-dump
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              volumeMounts:
+                - mountPath: /var/lib/postgresql
+                  name: postgresdata
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: postgresdata
+              persistentVolumeClaim:
+                claimName: postgres-pvc-vernissage
+  schedule: 0 */4 * * *
+  successfulJobsHistoryLimit: 3
+  suspend: false

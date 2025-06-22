@@ -213,6 +213,12 @@ Then you can access Vernissage at `http://localhost:8080`.
 
 ## Additional Notes
 
+- **Optional - Backups**: If you want to back up your Vernissage database periodically to Backblaze B2, you can use the `postgres-backup-cronjob.yaml` manifest in the `manifests/` folder.
+  - Remember to walk through the manifest and customize values to your environment such as:
+    - `YOUR_BUCKET_HERE`
+    - `YOUR_K8S_CLUSTER_NAME_HERE`
+    - `YOUR_S3_KEY_ID_HERE`
+    - `YOUR_S3_KEY_HERE`
 - Make sure to make your S3 bucket public (if on backblaze B2), so that Vernissage can provide URLs to images in it, to web clients, as part of the `VERNISSAGE_CSP_IMG` env var.
   - If you do not want to host a public S3 bucket, you'll need to run a some kind of proxy that can serve up the bucket contents, and use that proxy URL for `VERNISSAGE_CSP_IMG`.
     - Remember to set the following setting in the VerissageWeb UI to match the S3 proxy URL: _Vernissage -> Settings -> Images Url_
