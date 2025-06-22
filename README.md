@@ -219,6 +219,10 @@ Then you can access Vernissage at `http://localhost:8080`.
     - `YOUR_K8S_CLUSTER_NAME_HERE`
     - `YOUR_S3_KEY_ID_HERE`
     - `YOUR_S3_KEY_HERE`
+  - You can restore backups in the postgres container with the following command (make sure the VernissageServer/API pod/container is not running while you restore the database backup):
+    ```bash
+    psql -U vernissage-user -X -f /var/lib/postgresql/vernissage_db_file_here postgres
+    ```
 - Make sure to make your S3 bucket public (if on backblaze B2), so that Vernissage can provide URLs to images in it, to web clients, as part of the `VERNISSAGE_CSP_IMG` env var.
   - If you do not want to host a public S3 bucket, you'll need to run a some kind of proxy that can serve up the bucket contents, and use that proxy URL for `VERNISSAGE_CSP_IMG`.
     - Remember to set the following setting in the VerissageWeb UI to match the S3 proxy URL: _Vernissage -> Settings -> Images Url_
